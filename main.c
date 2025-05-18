@@ -19,41 +19,59 @@ int main()
     inicializarTablero(tateti);
     mostrarTablero(tateti);
     int fin = 0;
-    //int jugador1 = 0;
-    //int jugador2 = 0;
+
     int contador = 0;
+    char continuar = 's';
 
-    while(fin == 0)
+    while (continuar == 's')
     {
-        if(fin ==0)
+        while(fin == 0 || contador < 9)
         {
-            printf("\t \t JUGADOR NR 1 \n \n");
-            cargarTableroJ1(tateti);
-            fin = checkTerminaJuegoj1(tateti);
 
-            mostrarTablero(tateti);
+            if(fin ==0)
+            {
+                printf("\t \t JUGADOR NR 1 \n \n");
+                cargarTableroJ1(tateti);
+                fin = checkTerminaJuegoj1(tateti);
+                 contador++;
+                mostrarTablero(tateti);
+            }
+            if (fin == 0)
+            {
+                printf("\t \t JUGADOR NR 2 \n \n");
+                cargarTableroJ2(tateti);
+                fin = checkTerminaJuegoj2(tateti);
+                contador++;
+                mostrarTablero(tateti);
+                printf("\t*******CONTADOR %d ***********",contador);
+            }
+
+
+
         }
-        if (fin == 0)
+        if(fin == 1)
         {
-            printf("\t \t JUGADOR NR 2 \n \n");
-            cargarTableroJ2(tateti);
-            fin = checkTerminaJuegoj2(tateti);
-
-            mostrarTablero(tateti);
+            printf("\n \t \t ******GANO EL JUGADOR 1******");
         }
-        contador++;
+        if (fin==2)
+        {
+            printf("\n \t \t ******GANO EL JUGADOR 2******");
+        }if(fin==0)
+        {
+            printf("\n \t \t ******EMPATE ******");
+        }
 
+
+        printf("\n \t presiona 's' para jugar otra vez o cualquier tecla para salir: ");
+        fflush(stdin);
+        scanf("%c",&continuar);
+        inicializarTablero(tateti);
+        fin = 0;
+        contador = 0;
+        system("cls");
     }
 
 
-    if(fin == 1)
-    {
-        printf("\n \t \t ******GANO EL JUGADOR 1******");
-    }
-    else
-    {
-        printf("\n \t \t ******GANO EL JUGADOR 2******");
-    }
 }
 
 
