@@ -2,27 +2,57 @@
 #include <stdlib.h>
 #include "pila.h"
 
+/// prototipados
+
 void inicializarTablero(char tateti[3][3]);
 void mostrarTablero(char tateti[3][3]);
 void cargarTableroJ1(char tateti [3][3]);
 void cargarTableroJ2(char tateti [3][3]);
 int validaFilaYColumna (int *dato);
+int checkTerminaJuegoj1 (char tateti[3][3]);
+int checkTerminaJuegoj2 (char tateti[3][3]);
+
 
 int main()
 {
     char tateti[3][3];
     inicializarTablero(tateti);
     mostrarTablero(tateti);
+    int fin = 0;
+    //int jugador1 = 0;
+    //int jugador2 = 0;
+    int contador = 0;
 
-    for(int cantidad = 0; cantidad < 9; cantidad++){
+    while(fin == 0)
+    {
+        if(fin ==0)
+        {
+            printf("\t \t JUGADOR NR 1 \n \n");
+            cargarTableroJ1(tateti);
+            fin = checkTerminaJuegoj1(tateti);
 
-    printf("\t \t JUGADOR NR 1 \n \n");
-    cargarTableroJ1(tateti);
-    mostrarTablero(tateti);
-    printf("\t \t JUGADOR NR 2 \n \n");
-    cargarTableroJ2(tateti);
-    mostrarTablero(tateti);
+            mostrarTablero(tateti);
+        }
+        if (fin == 0)
+        {
+            printf("\t \t JUGADOR NR 2 \n \n");
+            cargarTableroJ2(tateti);
+            fin = checkTerminaJuegoj2(tateti);
 
+            mostrarTablero(tateti);
+        }
+        contador++;
+
+    }
+
+
+    if(fin == 1)
+    {
+        printf("\n \t \t ******GANO EL JUGADOR 1******");
+    }
+    else
+    {
+        printf("\n \t \t ******GANO EL JUGADOR 2******");
     }
 }
 
@@ -169,4 +199,90 @@ int validaFilaYColumna (int *dato) /// valida que el dato de la fila o columna e
     return flag;
 }
 
+int checkTerminaJuegoj1 (char tateti[3][3])
+{
 
+    int fin = 0 ;
+
+    for(int filas = 0 ; filas < 3 ; filas++)
+    {
+        ///chequea fila x fila a ver si hay 3 en linea
+        if( ( tateti[filas][0]!= ' ') &&(tateti[filas][0]==tateti[filas][1]) && (tateti[filas][0]==tateti[filas][2]) )
+        {
+            fin = 1;
+        }
+    }
+
+    for(int colu = 0 ; colu < 3 ; colu++)
+    {
+        ///chequea columna x columna a ver si hay 3 en linea
+        if( ( tateti[0][colu]!= ' ') &&(tateti[0][colu]==tateti[1][colu]) && (tateti[0][colu]==tateti[2][colu]) )
+        {
+            fin = 1;
+        }
+    }
+
+
+
+    ///chequea la diagonal principal a ver si hay 3 en linea
+    if( ( tateti[0][0]!= ' ') &&(tateti[0][0]==tateti[1][1]) && (tateti[0][0]==tateti[2][2]) )
+    {
+        fin = 1;
+
+    }
+
+
+    ///chequea la diagonal secundaria a ver si hay 3 en linea
+    if( ( tateti[0][2]!= ' ') &&(tateti[0][2]==tateti[1][1]) && (tateti[0][2]==tateti[2][0]) )
+    {
+        fin = 1;
+
+    }
+
+    return fin;
+
+}
+
+int checkTerminaJuegoj2 (char tateti[3][3])
+{
+
+    int fin = 0 ;
+
+    for(int filas = 0 ; filas < 3 ; filas++)
+    {
+        ///chequea fila x fila a ver si hay 3 en linea
+        if( ( tateti[filas][0]!= ' ') &&(tateti[filas][0]==tateti[filas][1]) && (tateti[filas][0]==tateti[filas][2]) )
+        {
+            fin = 'o';
+        }
+    }
+
+    for(int colu = 0 ; colu < 3 ; colu++)
+    {
+        ///chequea columna x columna a ver si hay 3 en linea
+        if( ( tateti[0][colu]!= ' ') &&(tateti[0][colu]==tateti[1][colu]) && (tateti[0][colu]==tateti[2][colu]) )
+        {
+            fin = 2;
+        }
+    }
+
+
+
+    ///chequea la diagonal principal a ver si hay 3 en linea
+    if( ( tateti[0][0]!= ' ') &&(tateti[0][0]==tateti[1][1]) && (tateti[0][0]==tateti[2][2]) )
+    {
+        fin = 2;
+
+    }
+
+
+    ///chequea la diagonal secundaria a ver si hay 3 en linea
+    if( ( tateti[0][2]!= ' ') &&(tateti[0][2]==tateti[1][1]) && (tateti[0][2]==tateti[2][0]) )
+    {
+        fin = 2;
+
+    }
+
+    return fin;
+
+}
