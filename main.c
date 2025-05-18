@@ -25,7 +25,7 @@ int main()
 
     while (continuar == 's')
     {
-        while(fin == 0 || contador < 9)
+        while(fin == 0 || contador == 9)
         {
 
             if(fin ==0)
@@ -33,7 +33,7 @@ int main()
                 printf("\t \t JUGADOR NR 1 \n \n");
                 cargarTableroJ1(tateti);
                 fin = checkTerminaJuegoj1(tateti);
-                 contador++;
+                contador++;
                 mostrarTablero(tateti);
             }
             if (fin == 0)
@@ -43,7 +43,7 @@ int main()
                 fin = checkTerminaJuegoj2(tateti);
                 contador++;
                 mostrarTablero(tateti);
-                printf("\t*******CONTADOR %d ***********",contador);
+
             }
 
 
@@ -53,7 +53,7 @@ int main()
         {
             printf("\n \t \t ******GANO EL JUGADOR 1******");
         }
-        if (fin==2)
+        if (fin == 2)
         {
             printf("\n \t \t ******GANO EL JUGADOR 2******");
         }if(fin==0)
@@ -271,7 +271,7 @@ int checkTerminaJuegoj2 (char tateti[3][3])
         ///chequea fila x fila a ver si hay 3 en linea
         if( ( tateti[filas][0]!= ' ') &&(tateti[filas][0]==tateti[filas][1]) && (tateti[filas][0]==tateti[filas][2]) )
         {
-            fin = 'o';
+            fin = 2;
         }
     }
 
