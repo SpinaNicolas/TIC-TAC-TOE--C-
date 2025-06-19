@@ -64,6 +64,7 @@ int validarPassword(char password[]);
 int validarDNI(char dni[], char archivoJugadores[]);
 ///nuevas
 stJugador cargaUNJugadorEnArchivo(char archivoJugadores[]); ///carga uno solo al archivo y lo retorna
+void cargaResultadoPartida (char jugadores[], int idJugador, int resultado) /// intento de cargar puntos , hay q verla todavia
 
 int main()
 {
@@ -464,7 +465,7 @@ void iniciarJuego(char tateti[3][3], int idJugador)
         if (idJugador == 0)
         {
             printf("\t\t\t En esta partida no se guardaran los puntos \n");
-            printf("Jugador 1 ingrese su nombre: \n");
+            printf("Jugador 1 ingrese su nombre: ");
             fflush(stdin);
             gets(jugador1);
         }
@@ -478,7 +479,7 @@ void iniciarJuego(char tateti[3][3], int idJugador)
         {
             if (idJugador == 0)///si idjugador1 es 0 ambos juegan como invitado
             {
-                printf("Jugador 2 ingrese su nombre: \n");
+                printf("\n Jugador 2 ingrese su nombre: ");
                 gets(jugador2);
             }
             else ///sino se le pregunta al 2 que quiere hacer
@@ -556,7 +557,7 @@ void iniciarJuego(char tateti[3][3], int idJugador)
             printf("\n\t****** GANA %s ******\n", jugador1); ///jugador 1 es el user que tenemos el id por parametro
             if(idJugador > 0)   /// osea que jugo con un user logeado entonces le cargo los puntos
             {
-                cargaResultadoPartida(jugadores_ar,idJugador,gana);
+                ///cargaResultadoPartida(jugadores_ar,idJugador,gana);
             }
 
         }
@@ -579,30 +580,6 @@ void iniciarJuego(char tateti[3][3], int idJugador)
         while(getchar() != '\n');
         scanf("%c", &continuar);
     }
-}
-
-void cargaResultadoPartida (char jugadores[], int idJugador, int resultado)
-{
-
-    stJugador aux;
-    FILE *archi = fopen(jugadores,"rb+");
-
-    if(archi)
-    {
-
-        while(fread(&aux,sizeof(stJugador),1,archi) > 0)
-        {
-            if(idJugador == aux.idJugador)
-            {
-                aux.ptsTotales = aux.ptsTotales + resultado;
-
-                fseek(archi, -sizeof(stJugador), SEEK_CUR);
-                fwrite(&aux, sizeof(stJugador), 1, archi);
-                break;
-            }
-        }
-    }
-    fclose(archi);
 }
 
 int modoJuego()
@@ -846,6 +823,32 @@ int ultIdArchivo(char archivoJugadores[])///busca en el archivo el ultimo id reg
         fclose(archi);
     }
     return id;
+}
+
+///nuevo --------------------------------------------------------
+
+void cargaResultadoPartida (char jugadores[], int idJugador, int resultado)
+{
+
+    stJugador aux;
+    FILE *archi = fopen(jugadores,"rb+");
+
+    if(archi)
+    {
+
+        while(fread(&aux,sizeof(stJugador),1,archi) > 0)
+        {
+            if(idJugador == aux.idJugador)
+            {
+                aux.ptsTotales = aux.ptsTotales + resultado;
+
+                fseek(archi, -sizeof(stJugador), SEEK_CUR);
+                fwrite(&aux, sizeof(stJugador), 1, archi);
+                break;
+            }
+        }
+    }
+    fclose(archi);
 }
 
 stJugador cargaUNJugadorEnArchivo(char archivoJugadores[])
