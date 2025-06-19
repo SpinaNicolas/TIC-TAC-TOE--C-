@@ -1,5 +1,3 @@
-
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -10,7 +8,8 @@
 #define partidas_ar "partidas.dat"
 #define partiXjugadores_ar "partidaXjugador.dat"
 
-typedef struct {
+typedef struct
+{
     int idJugador;
     char nombre[30];
     char apellido[30];
@@ -22,18 +21,20 @@ typedef struct {
     int eliminado; // 0 = activo, 1 = eliminado
 } stJugador;
 
-typedef struct {
+typedef struct
+{
     int idPartida;
     int dificultad;
     int esContraCpu;
 } stPartida;
 
-typedef struct {
+typedef struct
+{
     int idPartidaJugador;
     int idPartida;
     int idJugador;
-    int resultado;
-    int puntosJugador;
+    int resultado; /// 1 gana, 2 empata, 3 pierde
+    int puntosJugador;/// 3 gana, 1 empata, 0 pierde
 } stPartidaXJugador;
 
 // Prototipados
@@ -61,14 +62,18 @@ int validarEmail(char email[], char archivoJugadores[]);
 int validarUsername(char username[], char archivoJugadores[]);
 int validarPassword(char password[]);
 int validarDNI(char dni[], char archivoJugadores[]);
+///nuevas
+stJugador cargaUNJugadorEnArchivo(char archivoJugadores[]); ///carga uno solo al archivo y lo retorna
 
-int main() {
+int main()
+{
 
-        char tateti[3][3];
+    char tateti[3][3];
     int opcion = 0;
     stJugador jugadorActual = {0};
 
-    while (opcion != 5) {
+    while (opcion != 5)
+    {
         opcion = menu();
         jugadorActual = eleccionOpcionMenu(tateti, opcion, jugadores_ar, jugadorActual);
     }
@@ -112,7 +117,7 @@ void cargarTablero(char tateti[3][3], char simbolo, char nombre[])
             printf("\n %s, ingrese (%c) en la fila (0-2): ", nombre, simbolo);
             if (scanf("%d", &fila) != 1)
             {
-                printf("ERROR: Debe ingresar un nÃºmero.\n");
+                printf("ERROR: Debe ingresar un número.\n");
                 while(getchar() != '\n');
                 continue;
             }
@@ -127,7 +132,7 @@ void cargarTablero(char tateti[3][3], char simbolo, char nombre[])
             printf("\nIngrese la columna (0-2): ");
             if (scanf("%d", &colu) != 1)
             {
-                printf("ERROR: Debe ingresar un nÃºmero.\n");
+                printf("ERROR: Debe ingresar un número.\n");
                 while(getchar() != '\n');
                 continue;
             }
@@ -138,7 +143,7 @@ void cargarTablero(char tateti[3][3], char simbolo, char nombre[])
         while (!flag);
 
         if (tateti[fila][colu] != ' ')
-            printf("Lugar ocupado, intenta con otra posiciÃ³n.\n");
+            printf("Lugar ocupado, intenta con otra posición.\n");
         else
         {
             tateti[fila][colu] = simbolo;
@@ -204,123 +209,145 @@ int menu()
     {
         printf("\n\nSeleccione una opcion (1-5): ");
         scanf("%d", &opcion);
-fflush(stdin);
+        fflush(stdin);
 
     }
     while (opcion < 1 || opcion >5);
     return opcion;
 }
 
-stJugador eleccionOpcionMenu(char tateti[3][3],int opcion, char archivoJugadores[], stJugador jugador) {
-    switch (opcion) {
-        case 1:
-            jugador = iniciarSesion(archivoJugadores);
-            if (jugador.idJugador != 0) {
-                jugador = menuUsuario(tateti, jugador);
-            }
-            break;
-        case 2:
-            cargaArchivoJugadores(archivoJugadores);
-            muestraArchivoJugadores(archivoJugadores);
-            break;
-        case 3:
-            iniciarJuego(tateti,0);
-            break;
-        case 4:
-            reglas();
-            break;
-        case 5:
+stJugador eleccionOpcionMenu(char tateti[3][3],int opcion, char archivoJugadores[], stJugador jugador)
+{
+    switch (opcion)
+    {
+    case 1:
+
+        jugador = iniciarSesion(archivoJugadores);
+        if (jugador.idJugador != 0)
+        {
+            jugador = menuUsuario(tateti, jugador);
+        }
+        break;
+    case 2:
+        cargaArchivoJugadores(archivoJugadores);
+        muestraArchivoJugadores(archivoJugadores);
+        jugador = iniciarSesion(archivoJugadores);
+        if (jugador.idJugador != 0)
+        {
+            jugador = menuUsuario(tateti, jugador);
+        }
+        break;
+    case 3:
+        iniciarJuego(tateti,0);
+        break;
+    case 4:
+        reglas();
+        break;
+    case 5:
         printf("Saliendo... presione una tecla y la consola se cerrara. \n");
-            break;
+        break;
     }
     return jugador;
 }
 
-stJugador iniciarSesion(char archivoJugadores[]) {
+stJugador iniciarSesion(char archivoJugadores[])
+{
     FILE *archi = fopen(archivoJugadores, "rb");
     stJugador aux, jugador = {0};
     char email[50], password[20];
 
-    if (!archi) {
+    if (!archi)
+    {
         printf("\nError al abrir el archivo de jugadores.\n");
         return jugador;
     }
-
-    printf("\nIngrese su email: ");
+    printf("\t\t\t-----------INICIAR SESION ----------------\n");
+    printf("\t\t\tIngrese su email: ");
     fflush(stdin);
     gets(email);
-    printf("Ingrese su contrasena: ");
+    printf("\t\t\tIngrese su contrasena: ");
     fflush(stdin);
     gets(password);
 
-    while (fread(&aux, sizeof(stJugador), 1, archi) > 0) {
-        if (strcmp(aux.email, email) == 0 && strcmp(aux.password, password) == 0 && aux.eliminado == 0) {
+    while (fread(&aux, sizeof(stJugador), 1, archi) > 0)
+    {
+        if (strcmp(aux.email, email) == 0 && strcmp(aux.password, password) == 0 && aux.eliminado == 0)
+        {
             jugador = aux;
             break;
         }
     }
     fclose(archi);
 
-    if (jugador.idJugador == 0) {
+    if (jugador.idJugador == 0)
+    {
         printf("\n Email o contrasena incorrectas o cuenta eliminada.\n");
-    } else {
+    }
+    else
+    {
         printf("\n Bienvenido, %s!\n", jugador.nombre);
     }
 
     return jugador;
 }
 
-stJugador menuUsuario(char tateti[3][3], stJugador jugador) {
+stJugador menuUsuario(char tateti[3][3], stJugador jugador)
+{
     int opcion;
 
-    do {
-    printf("\t\t\t||======================================||\n");
-    printf("\t\t\t||             Bienvenido!              ||\n");
-    printf("\t\t\t||      Menu de usuario (%s)            ||\n", jugador.username);
-    printf("\t\t\t||======================================||\n");
-    printf("\t\t\t||      1. Ver perfil                   ||\n");
-    printf("\t\t\t||      2. Modificar username           ||\n");
-    printf("\t\t\t||      3. Jugar                        ||\n");
-    printf("\t\t\t||      4. Ver estadisticas             ||\n");
-    printf("\t\t\t||      5. Eliminar cuenta              ||\n");
-    printf("\t\t\t||      6. Cerrar sesion                ||\n");
-    printf("\t\t\t||======================================||\n");
-    printf("\nSeleccione una opcion (1-6): ");
+    do
+    {
+        printf("\t\t\t||======================================||\n");
+        printf("\t\t\t||             Bienvenido!              ||\n");
+        printf("\t\t\t||      Menu de usuario (%s)            ||\n", jugador.username);
+        printf("\t\t\t||======================================||\n");
+        printf("\t\t\t||      1. Ver perfil                   ||\n");
+        printf("\t\t\t||      2. Modificar username           ||\n");
+        printf("\t\t\t||      3. Jugar                        ||\n");
+        printf("\t\t\t||      4. Ver estadisticas             ||\n");
+        printf("\t\t\t||      5. Eliminar cuenta              ||\n");
+        printf("\t\t\t||      6. Cerrar sesion                ||\n");
+        printf("\t\t\t||======================================||\n");
+        printf("\nSeleccione una opcion (1-6): ");
         scanf("%d", &opcion);
-fflush(stdin);
-        switch (opcion) {
-            case 1:
-                muestraUnJugador(jugador);
-                break;
-            case 2:
-                jugador = modificarUsername(jugadores_ar, jugador);
-                break;
-            case 3:
-                iniciarJuego(tateti,jugador.idJugador);
-                break;
-            case 4:
-                mostrarEstadisticas(jugadores_ar, partiXjugadores_ar, jugador.idJugador);
-                break;
-            case 5:
-                eliminarJugador(jugadores_ar, jugador);
-                jugador.idJugador = 0;
-                break;
-            case 6:
-                printf("\nCerrando sesiÃ³n...\n");
-                break;
-            default:
-                printf("\n opcion no valida, ingrese nuevamente opcion\n");
+        fflush(stdin);
+        switch (opcion)
+        {
+        case 1:
+            muestraUnJugador(jugador);
+            break;
+        case 2:
+            jugador = modificarUsername(jugadores_ar, jugador);
+            break;
+        case 3:
+            iniciarJuego(tateti,jugador.idJugador);
+            break;
+        case 4:
+            mostrarEstadisticas(jugadores_ar, partiXjugadores_ar, jugador.idJugador);
+            break;
+        case 5:
+            eliminarJugador(jugadores_ar, jugador);
+            jugador.idJugador = 0;
+            break;
+        case 6:
+            printf("\nCerrando sesión...\n");
+            break;
+        default:
+            printf("\n opcion no valida, ingrese nuevamente opcion\n");
         }
-    } while (opcion != 6 && jugador.idJugador != 0);
+    }
+    while (opcion != 6 && jugador.idJugador != 0);
 
     return jugador;
 }
 
-stJugador modificarUsername(char archivoJugadores[], stJugador jugador) {
+stJugador modificarUsername(char archivoJugadores[], stJugador jugador)
+{
     FILE *archi = fopen(archivoJugadores, "rb+");
     stJugador aux;
 
-    if (!archi) {
+    if (!archi)
+    {
         printf("\nError al abrir el archivo de jugadores.\n");
         return jugador;
     }
@@ -329,8 +356,10 @@ stJugador modificarUsername(char archivoJugadores[], stJugador jugador) {
     fflush(stdin);
     gets(jugador.username);
 
-    while (fread(&aux, sizeof(stJugador), 1, archi) > 0) {
-        if (aux.idJugador == jugador.idJugador) {
+    while (fread(&aux, sizeof(stJugador), 1, archi) > 0)
+    {
+        if (aux.idJugador == jugador.idJugador)
+        {
             strcpy(aux.username, jugador.username);
             fseek(archi, -sizeof(stJugador), SEEK_CUR);
             fwrite(&aux, sizeof(stJugador), 1, archi);
@@ -342,28 +371,28 @@ stJugador modificarUsername(char archivoJugadores[], stJugador jugador) {
     return jugador;
 }
 
-void mostrarEstadisticas(char archivoJugadores[], char archivoPartidasXJugador[], int idJugador) {
+void mostrarEstadisticas(char archivoJugadores[], char archivoPartidasXJugador[], int idJugador)
+{
     FILE *archi = fopen(archivoPartidasXJugador, "rb");
     stPartidaXJugador aux;
     int jugadas = 0, ganadas = 0, empates = 0, derrotas = 0;
 
-    if (!archi) {
-        printf("\nError al abrir el archivo de estadÃ­sticas.\n");
-        return;
-    }
-
-    while (fread(&aux, sizeof(stPartidaXJugador), 1, archi) > 0) {
-        if (aux.idJugador == idJugador) {
-            jugadas++;
-            if (aux.resultado == 1) ganadas++;
-            else if (aux.resultado == 2) empates++;
-            else derrotas++;
+    if (archi)
+    {
+        while (fread(&aux, sizeof(stPartidaXJugador), 1, archi) > 0)
+        {
+            if (aux.idJugador == idJugador)
+            {
+                jugadas++;
+                if (aux.resultado == 1) ganadas++;
+                else if (aux.resultado == 2) empates++;
+                else derrotas++;
+            }
         }
+
+        fclose(archi);
     }
-
-    fclose(archi);
-
-    printf("\n=== EstadÃ­sticas del Jugador ===\n");
+    printf("\n=== Estadísticas del Jugador ===\n");
     printf("Partidas jugadas: %d\n", jugadas);
     printf("Ganadas: %d\n", ganadas);
     printf("Empates: %d\n", empates);
@@ -379,17 +408,21 @@ void mostrarEstadisticas(char archivoJugadores[], char archivoPartidasXJugador[]
     printf("Porcentaje de empates: %.2f%%\n", porcentajeE);
 }
 
-void eliminarJugador(char archivoJugadores[], stJugador jugador) {
+void eliminarJugador(char archivoJugadores[], stJugador jugador)
+{
     FILE *archi = fopen(archivoJugadores, "rb+");
     stJugador aux;
 
-    if (!archi) {
+    if (!archi)
+    {
         printf("\nError al abrir el archivo de jugadores.\n");
         return;
     }
 
-    while (fread(&aux, sizeof(stJugador), 1, archi) > 0) {
-        if (aux.idJugador == jugador.idJugador) {
+    while (fread(&aux, sizeof(stJugador), 1, archi) > 0)
+    {
+        if (aux.idJugador == jugador.idJugador)
+        {
             aux.eliminado = 1;
             fseek(archi, -sizeof(stJugador), SEEK_CUR);
             fwrite(&aux, sizeof(stJugador), 1, archi);
@@ -412,34 +445,77 @@ void reglas()
     printf("\t\t||  5. Empate: Si se llena el tablero sin ganar  ||\n");
     printf("\t\t||===============================================||\n");
 }
-void iniciarJuego(char tateti[3][3], int idJugador) {
+void iniciarJuego(char tateti[3][3], int idJugador)
+{
+
     char continuar = 's';
     int modo = 0;
     srand(time(NULL));
+    int opcion;
+    stJugador player2;
 
-    while (continuar == 's' || continuar == 'S') {
+    while (continuar == 's' || continuar == 'S')
+    {
         modo = modoJuego();
 
         char jugador1[50] = "Jugador 1";
         char jugador2[50] = "Jugador 2";
 
-        if (idJugador == 0) {
+        if (idJugador == 0)
+        {
+            printf("\t\t\t En esta partida no se guardaran los puntos \n");
             printf("Jugador 1 ingrese su nombre: \n");
             fflush(stdin);
             gets(jugador1);
-        } else {
-            // PodÃ©s recuperar nombre desde el struct usando idJugador si querÃ©s
+        }
+        else
+        {
+            // Podés recuperar nombre desde el struct usando idJugador si querés
             strcpy(jugador1, "Usuario Logueado");
         }
 
-        if (modo == 1) {
-            if (idJugador == 0) {
+        if (modo == 1)
+        {
+            if (idJugador == 0)///si idjugador1 es 0 ambos juegan como invitado
+            {
                 printf("Jugador 2 ingrese su nombre: \n");
                 gets(jugador2);
-            } else {
-                strcpy(jugador2, "Jugador 2");
             }
-        } else {
+            else ///sino se le pregunta al 2 que quiere hacer
+            {
+
+                do
+                {
+
+                    printf("jugador 2 quiere: \n");
+                    printf("1 - para jugar con una cuenta ya creada \n");
+                    printf("2 - para jugar con una cuenta NUEVA \n");
+                    printf("3 - para jugar como invitado (*no se guardaran los puntos) \n");
+                    scanf("%d",&opcion);
+
+                }
+                while (opcion < 1 || opcion > 3);
+
+            }
+
+            if(opcion == 1)
+            {
+                player2 = iniciarSesion(jugadores_ar);
+            }
+            else if(opcion == 2)
+            {
+                player2 = cargaUNJugadorEnArchivo(jugadores_ar);
+
+            }else if(opcion == 3){
+            printf("En esta partida no se guardaran los puntos \n");
+            printf("Jugador 2 ingrese su nombre: \n");
+            gets(jugador2);
+            }
+        }
+
+
+        else
+        {
             strcpy(jugador2, "PC");
         }
 
@@ -449,13 +525,19 @@ void iniciarJuego(char tateti[3][3], int idJugador) {
 
         int fin = 0, contador = 0, turno = 1;
 
-        while (fin == 0 && contador < 9) {
-            if (turno == 1) {
-                printf("\n\t\tTURNO - %s (X)\n\n", jugador1);
+        while (fin == 0 && contador < 9)
+        {
+            if (turno == 1)
+            {
+                ///printf("\n\t\tTURNO - %s (X)\n\n", jugador1);
+                printf("\n\t\tTURNO - JUGADOR 1 (X)\n\n", jugador1);
                 cargarTablero(tateti, 'X', jugador1);
                 if (checkTerminaJuego(tateti, 'X')) fin = 1;
-            } else {
-                printf("\n\t\tTURNO - %s (O)\n\n", jugador2);
+            }
+            else
+            {
+                printf("\n\t\tTURNO - JUGADOR 2(O)\n\n");
+                ///printf("\n\t\tTURNO - %s (O)\n\n", jugador2);
                 if (modo == 1)
                     cargarTablero(tateti, 'O', jugador2);
                 else
@@ -467,18 +549,29 @@ void iniciarJuego(char tateti[3][3], int idJugador) {
             mostrarTablero(tateti);
             turno = (turno == 1) ? 2 : 1;
         }
+        int gana = 3, pierde=0, empata=1;
 
-        if (fin == 1) {
-            printf("\n\t****** GANA %s ******\n", jugador1);
-            // Si hay sesiÃ³n, guardar estadÃ­stica
-        } else if (fin == 2) {
+        if (fin == 1)
+        {
+            printf("\n\t****** GANA %s ******\n", jugador1); ///jugador 1 es el user que tenemos el id por parametro
+            if(idJugador > 0)   /// osea que jugo con un user logeado entonces le cargo los puntos
+            {
+                cargaResultadoPartida(jugadores_ar,idJugador,gana);
+            }
+
+        }
+        else if (fin == 2)
+        {
             printf("\n\t****** GANA %s ******\n", jugador2);
-        } else {
+        }
+        else
+        {
             printf("\n\t****** EMPATE ******\n");
         }
 
-        if (idJugador > 0) {
-            printf("\n(EstadÃ­stica registrada para el jugador con ID %d)\n", idJugador);
+        if (idJugador > 0)
+        {
+            printf("\n(Estadistica registrada para el jugador con ID %d)\n", idJugador);
             // guardarResultado(idJugador, fin);
         }
 
@@ -486,6 +579,30 @@ void iniciarJuego(char tateti[3][3], int idJugador) {
         while(getchar() != '\n');
         scanf("%c", &continuar);
     }
+}
+
+void cargaResultadoPartida (char jugadores[], int idJugador, int resultado)
+{
+
+    stJugador aux;
+    FILE *archi = fopen(jugadores,"rb+");
+
+    if(archi)
+    {
+
+        while(fread(&aux,sizeof(stJugador),1,archi) > 0)
+        {
+            if(idJugador == aux.idJugador)
+            {
+                aux.ptsTotales = aux.ptsTotales + resultado;
+
+                fseek(archi, -sizeof(stJugador), SEEK_CUR);
+                fwrite(&aux, sizeof(stJugador), 1, archi);
+                break;
+            }
+        }
+    }
+    fclose(archi);
 }
 
 int modoJuego()
@@ -508,6 +625,7 @@ int modoJuego()
 stJugador cargaUnJugador (char archivoJugadores[])
 {
     stJugador dato;
+    fflush(stdin);
     printf("\n ingrese su nombre: ");
     gets(dato.nombre);
 
@@ -593,10 +711,9 @@ void muestraUnJugador (stJugador dato)
     printf("\n username: %s",dato.username);
     printf("\n DNI: %s",dato.dni);
     printf("\n ID: %d",dato.idJugador);
-    /**
     printf("\n puntos totales: %d",dato.ptsTotales);
     printf("\n estado: %d",dato.eliminado);
-    */
+
     printf("\n----------------------\n ");
 }
 
@@ -652,7 +769,7 @@ int validarPassword(char password[])     /// esta no sabia hacerla ,tube que bus
     }
     int resultado = 0;
     resultado = tieneMayus + tieneMinus ;
-
+    printf("resultado = %d \n ",resultado);
     return resultado;
 }
 
@@ -684,7 +801,7 @@ int validarEmail(char email[], char archivoJugadores[]) /// valida email no repe
     char *arroba = strchr(email, '@'); /// si hay arroba devuelve 1-//strchr devuelve puntero de la dircDeMemoria de donde esta @
     if (arroba != NULL && strchr(arroba, '.') != NULL)   /// si devolvio !NULL y tiene un . dsp de la @ entra al if
     {
-        flag++; // vÃ¡lido
+        flag++; // válido
     }
 
     FILE* archi = fopen(archivoJugadores, "rb");
@@ -731,4 +848,19 @@ int ultIdArchivo(char archivoJugadores[])///busca en el archivo el ultimo id reg
     return id;
 }
 
+stJugador cargaUNJugadorEnArchivo(char archivoJugadores[])
+{
+    FILE *archi = fopen(archivoJugadores,"ab");
+    stJugador aux;
+
+    if(archi)
+    {
+        aux = cargaUnJugador(archivoJugadores);
+        aux.idJugador = ultIdArchivo(archivoJugadores);
+        fwrite(&aux,sizeof(stJugador),1,archi);
+
+    }
+    fclose(archi);
+    return aux;
+}
 
