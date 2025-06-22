@@ -70,7 +70,7 @@ void guardarPartidaEnArchivo(stPartidaXJugador partida);
 int obtenerNombresJugadores(int idJugador, int modo, char jugador1[], char jugador2[], stJugador* player2, int* opcion);
 int jugarUnaPartida(char tateti[3][3], int idJugador, int modo, char jugador1[], char jugador2[]);
 void mostrarResultadoPartida(int fin, char jugador1[], char jugador2[], int idJugador);
-int ultIdPartidaArchivo(const char archivo[]);
+int ultIdPartidaArchivo(char archivo[]);
 void actualizarPuntosJugador( char archivo[], int idJugador, int puntosASumar);
 
 int main()
@@ -406,7 +406,7 @@ void mostrarEstadisticas(char archivoJugadores[], char archivoPartidasXJugador[]
         return;
     }
 
-    // EstadÌsticas de partidas jugadas
+    // Estad√≠sticas de partidas jugadas
     FILE* archi = fopen(archivoPartidasXJugador, "rb");
     stPartidaXJugador aux;
     int jugadas = 0, ganadas = 0, empates = 0, derrotas = 0;
@@ -523,7 +523,7 @@ void iniciarJuego(char tateti[3][3], int idJugador)
 
             actualizarPuntosJugador(jugadores_ar, idJugador, puntosJugador1);
 
-            /// Si el jugador 2 no es invitado ni PC, tambiÈn guardamos su resultado
+            /// Si el jugador 2 no es invitado ni PC, tambi√©n guardamos su resultado
            /// printf("modo: %d | opcion: %d\n", modo, opcion);
             if (modo == 1 && opcion != 3)
             {
@@ -749,7 +749,7 @@ int validarEmail(char email[], char archivoJugadores[]) /// valida email no repe
     char *arroba = strchr(email, '@'); /// si hay arroba devuelve 1-//strchr devuelve puntero de la dircDeMemoria de donde esta @
     if (arroba != NULL && strchr(arroba, '.') != NULL)   /// si devolvio !NULL y tiene un . dsp de la @ entra al if
     {
-        flag++; // v·lido
+        flag++; // v√°lido
     }
 
     FILE* archi = fopen(archivoJugadores, "rb");
@@ -820,7 +820,7 @@ void guardarDatosPartida(int idJugador, int resultado)
         break;
     }
 
-    guardarPartidaEnArchivo(partida);  // Ya usa la constante tambiÈn
+    guardarPartidaEnArchivo(partida);  // Ya usa la constante tambi√©n
 }
 
 void guardarPartidaEnArchivo(stPartidaXJugador partida)
@@ -1001,7 +1001,7 @@ stJugador cargaUNJugadorEnArchivo(char archivoJugadores[])
     return aux;
 }
 
-int ultIdPartidaArchivo(const char archivo[])
+int ultIdPartidaArchivo(char archivo[])
 {
     int cant, id = 1;
     stPartidaXJugador aux;
