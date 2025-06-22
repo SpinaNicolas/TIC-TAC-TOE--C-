@@ -406,7 +406,7 @@ void mostrarEstadisticas(char archivoJugadores[], char archivoPartidasXJugador[]
         return;
     }
 
-    // EstadÃ­sticas de partidas jugadas
+    // Estadísticas de partidas jugadas
     FILE* archi = fopen(archivoPartidasXJugador, "rb");
     stPartidaXJugador aux;
     int jugadas = 0, ganadas = 0, empates = 0, derrotas = 0;
@@ -523,7 +523,7 @@ void iniciarJuego(char tateti[3][3], int idJugador)
 
             actualizarPuntosJugador(jugadores_ar, idJugador, puntosJugador1);
 
-            /// Si el jugador 2 no es invitado ni PC, tambiÃ©n guardamos su resultado
+            /// Si el jugador 2 no es invitado ni PC, también guardamos su resultado
            /// printf("modo: %d | opcion: %d\n", modo, opcion);
             if (modo == 1 && opcion != 3)
             {
@@ -749,7 +749,7 @@ int validarEmail(char email[], char archivoJugadores[]) /// valida email no repe
     char *arroba = strchr(email, '@'); /// si hay arroba devuelve 1-//strchr devuelve puntero de la dircDeMemoria de donde esta @
     if (arroba != NULL && strchr(arroba, '.') != NULL)   /// si devolvio !NULL y tiene un . dsp de la @ entra al if
     {
-        flag++; // vÃ¡lido
+        flag++; // válido
     }
 
     FILE* archi = fopen(archivoJugadores, "rb");
@@ -820,7 +820,7 @@ void guardarDatosPartida(int idJugador, int resultado)
         break;
     }
 
-    guardarPartidaEnArchivo(partida);  // Ya usa la constante tambiÃ©n
+    guardarPartidaEnArchivo(partida);  // Ya usa la constante también
 }
 
 void guardarPartidaEnArchivo(stPartidaXJugador partida)
@@ -1043,9 +1043,6 @@ void actualizarPuntosJugador(char archivo[], int idJugador, int puntosASumar)
                 fseek(archi, -sizeof(stJugador), SEEK_CUR);
                 fwrite(&jugador, sizeof(stJugador), 1, archi);
 
-                ///printf("\nðŸ“Œ Jugador ID %d: %s %s\n", jugador.idJugador, jugador.nombre, jugador.apellido);
-                ///printf("ðŸ§® Puntos antes: %d | Puntos sumados: %d | Total actual: %d\n",
-                       puntosAnteriores, puntosASumar, jugador.ptsTotales);
 
                 encontrado = 1;
             }
